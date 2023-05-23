@@ -3,7 +3,6 @@ import boto3
 import psycopg2
 from psycopg2.extras import RealDictCursor
 import csv
-from os import getenv
 
 
 
