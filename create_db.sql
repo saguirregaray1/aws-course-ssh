@@ -1,15 +1,15 @@
 CREATE SCHEMA apps_schema;
 
-CREATE TABLE apps_schema.apps (
-  app_name VARCHAR,
-  app_id VARCHAR,
-  category VARCHAR,
-  rating NUMERIC,
-  rating_count INTEGER,
-  maximum_installs INTEGER,
-  is_free BOOLEAN,
-  last_updated VARCHAR,
-  content_rating VARCHAR,
-  ad_supported BOOLEAN,
-  CONSTRAINT pk_apps PRIMARY KEY (app_id)
-);
+CREATE TABLE IF NOT EXISTS apps_schema.playstore
+(
+    app_name character varying COLLATE pg_catalog."default",
+    app_id character varying COLLATE pg_catalog."default" NOT NULL,
+    category character varying COLLATE pg_catalog."default",
+    rating double precision,
+    rating_count bigint,
+    maximum_installs bigint,
+    last_updated character varying COLLATE pg_catalog."default",
+    content_rating character varying COLLATE pg_catalog."default",
+    ad_supported boolean,
+    market_segment character varying COLLATE pg_catalog."default"
+)
