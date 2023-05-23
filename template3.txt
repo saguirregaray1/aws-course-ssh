@@ -1,0 +1,53 @@
+Parameters:
+  VpcId:
+    Description: Select an existing VPC
+    Type: AWS::EC2::VPC::Id
+
+  SubnetId:
+    Description: Select a subnet within the VPC
+    Type: AWS::EC2::Subnet::Id
+
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      -
+        Label:
+          Default: "Network setup"
+        Parameters:
+          - VpcId
+          - SubnetId
+
+Resources:
+
+  InstanceSecurityGroup:
+    Type: "AWS::EC2::SecurityGroup"
+    Properties:
+      GroupDescription: "Security group for EC2 instance"
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 18.206.107.24/29
+          # The IP for us-east-1 is 18.206.107.24/29
+          # Full list of IPs at https://ip-ranges.amazonaws.com/ip-ranges.json
+    
+  MyInstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Path: /
+      Roles:
+        - LabRole
+
+  EC2Instance:
+    Type: "AWS::EC2::Instance"
+    Properties:
+      InstanceType: "t2.micro"
+      ImageId: "ami-06e46074ae430fba6" 
+      SecurityGroupIds:
+        - !Ref InstanceSecurityGroup
+      SubnetId: !Ref SubnetId
+      IamInstanceProfile: !Ref MyInstanceProfile
+      Tags:
+        - Key: Name 
+          Value: my-new-ec2-instance
