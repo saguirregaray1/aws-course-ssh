@@ -12,6 +12,7 @@ const client = new DynamoDBClient({});
 const dynamo = DynamoDBDocumentClient.from(client);
 
 const tableName = "apps_queries";
+const tableName1 = "ratings_queries"
 
 export const handler = async (event, context) => {
   let body;
@@ -22,7 +23,7 @@ export const handler = async (event, context) => {
 
   try {
     switch (event.routeKey) {
-      case "GET /apps/{category}":
+      case "GET /apps/installs/{category}":
         body = await dynamo.send(
           new GetCommand({
             TableName: tableName,
@@ -33,9 +34,26 @@ export const handler = async (event, context) => {
         );
         body = body.Item;
         break;
-      case "GET /apps":
+      case "GET /apps/installs":
         body = await dynamo.send(
           new ScanCommand({ TableName: tableName })
+        );
+        body = body.Items;
+        break;
+      case "GET /apps/ratings/{category}":
+        body = await dynamo.send(
+          new GetCommand({
+            TableName: tableName1,
+            Key: {
+              category: event.pathParameters.category,
+            },
+          })
+        );
+        body = body.Item;
+        break;
+      case "GET /apps/ratings":
+        body = await dynamo.send(
+          new ScanCommand({ TableName: tableName1 })
         );
         body = body.Items;
         break;
@@ -55,3 +73,4 @@ export const handler = async (event, context) => {
     headers,
   };
 };
+
